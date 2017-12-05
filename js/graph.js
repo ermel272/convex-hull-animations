@@ -15,33 +15,33 @@ function getRandomInt(min, max) {
 }
 
 function createVertices() {
-        num = document.getElementById('num_vertices').value;
-        
-        if (num === "") { return }
-        
-        // Unbind update event and clear canvas
-        two.unbind('update', null)
-        two.clear()
-        vertices = []
-        
-        for (i = 0; i < num; i++) {
-            var x = getRandomInt(padding, two_params.width - padding)
-            var y = getRandomInt(padding, two_params.height - padding)
-            var circle = two.makeCircle(x, y, radius);
-            circle.fill = '#FF8000';
-            vertices.push(circle)
+    num = document.getElementById('num_vertices').value;
+    
+    if (num === "") { return }
+    
+    // Unbind update event and clear canvas
+    two.unbind('update', null)
+    two.clear()
+    vertices = []
+    
+    for (i = 0; i < num; i++) {
+        var x = getRandomInt(padding, two_params.width - padding)
+        var y = getRandomInt(padding, two_params.height - padding)
+        var circle = two.makeCircle(x, y, radius);
+        circle.fill = '#FF8000';
+        vertices.push(circle)
+    }
+    
+    var group = two.makeGroup(...vertices);
+    group.scale = 0.0;
+    
+    // Animate the creation of the vertices
+    two.bind('update', function(frameCount) {
+        if (group.scale < 0.9999) {
+            var t = (1 - group.scale) * 0.125;
+            group.scale += t;
         }
-        
-        var group = two.makeGroup(...vertices);
-        group.scale = 0.0;
-        
-        // Animate the creation of the vertices
-        two.bind('update', function(frameCount) {
-            if (group.scale < 0.9999) {
-                var t = (1 - group.scale) * 0.125;
-                group.scale += t;
-            }
-        }).play();
+    }).play();
 }
 
 function execute() {
