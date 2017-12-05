@@ -1,0 +1,13 @@
+.center {
+    text-align: center;
+}
+
+#canvas {
+    max-width: 800px;
+    margin: auto;
+    border: thick dotted black;
+}
+
+table {
+    margin: auto;
+}

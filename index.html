@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script type="text/javascript" src="js/two.js"></script>
+		<script type="text/javascript" src="js/two.min.js"></script>
+        <script type="text/javascript" src="js/algorithms.js"></script>
 		<script type="text/javascript" src="js/graph.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
 	</head>
 	<body>
 		<header>
@@ -10,12 +12,28 @@
 			<h4>Animating the computation of convex hulls in two dimensions</h4>
 		</header>
 		
-		<div id="fields" >
-			Create Vertices (enter a value between 1 and 20):
-			<input type="number" id="num_vertices" name="vertices" min="1" max="20">
-			<button id="add_vertices" name="add_vertices" onclick="createVertices()"> Create </button>
-		</div>
-		
-		<div id="canvas"/>
+        <table>
+            <tr>
+                <td>
+                    <div id="canvas"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    Create Vertices (enter a value between 1 and 20):
+                    <input type="number" id="num_vertices" name="vertices" min="1" max="20">
+                    <button id="add_vertices" name="add_vertices" onclick="createVertices()"> Create </button>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    Algorithm:
+                    <select id="algorithm">
+                        <option value="gift_wrap">Gift Wrapping</option>
+                    </select>
+                    <button id="execute" name="execute" onclick="execute()"> Execute </button>
+                </td>
+            </tr>
+        </table>
 	</body>
 </html>
