@@ -49,7 +49,7 @@ function execute() {
     
     // Find & execute algorithm chosen in the DOM
     alg = document.getElementById('algorithm').value;
-    algorithms[alg](vertices)
+    algorithms[alg].execute(vertices, two)
 }
 
 // Create canvas once DOM has been loaded
