@@ -94,5 +94,5 @@ var giftWrap = {
         }
         
         return leftMost
-    },
+    }
 }
