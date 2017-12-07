@@ -16,6 +16,8 @@ function getRandomInt(min, max) {
 
 function createVertices() {
     num = document.getElementById('num_vertices').value;
+    executeButton = document.getElementById("execute");
+    executeButton.disabled = true
     
     if (num === "") { return }
     
@@ -42,6 +44,9 @@ function createVertices() {
         if (group.scale < 0.9999) {
             var t = (1 - group.scale) * 0.125;
             group.scale += t;
+        } else {
+            two.unbind('update', null)
+            executeButton.disabled = false
         }
     }).play();
 }

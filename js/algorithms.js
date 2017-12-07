@@ -23,7 +23,7 @@ var giftWrap = {
             
             two.bind('update', function(frameCount) {
                 if (edge.scale < 0.9999) {
-                    var t = (1 - edge.scale) * 0.125;
+                    var t = (1 - edge.scale) * 0.3;
                     edge.scale += t;
                 } else {
                     two.unbind('update')
@@ -50,11 +50,11 @@ var giftWrap = {
             
             two.bind('update', function(frameCount) {
                 if (edge2.scale < 0.9999) {
-                    var t = (1 - edge2.scale) * 0.125;
+                    var t = (1 - edge2.scale) * 0.3;
                     edge2.scale += t;
                 } else {
                     two.unbind('update')
-                    if ((endpoint == hullPoint) || (giftWrap.leftTurn(hullPoint, endpoint, vertex))) {
+                    if ((endpoint === hullPoint) || (giftWrap.leftTurn(hullPoint, endpoint, vertex))) {
                         // Point is to the left of reference line
                         endpoint = vertex
                         two.remove(edge)
@@ -82,7 +82,7 @@ var giftWrap = {
     },
     
     leftTurn : function(v1, v2, v3) {
-        det = (v2.x - v1.x)*(v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x)
+        det = (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x)
         return det < 0
     },
     
