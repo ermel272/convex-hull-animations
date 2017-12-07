@@ -3,10 +3,10 @@ var checkEdgeColor = "rgba(255, 0, 0, 0.5)"
 var hullEdgeColor = "rgba(0, 255, 0, 0.5)"
 
 var giftWrap = {
-	execute : function(vertices, two) {
-		var hull = []
-		var hullPoint = giftWrap.findLeftmostPoint(vertices)
-		var endpoint = null
+    execute : function(vertices, two) {
+        var hull = []
+        var hullPoint = giftWrap.findLeftmostPoint(vertices)
+        var endpoint = null
         var hull_edges = two.makeGroup()
         
         function point_step(i) {
@@ -70,7 +70,7 @@ var giftWrap = {
         }
         
         point_step(0)
-	},
+    },
     
     createEdge : function(two, color, v1, v2) {
         edge = two.makeLine(v1.x, v1.y, v2.x, v2.y)
@@ -85,14 +85,14 @@ var giftWrap = {
         det = (v2.x - v1.x)*(v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x)
         return det < 0
     },
-	
-	findLeftmostPoint : function(vertices) {
-		leftMost = vertices[0]
-		
-		for (var i in vertices) {
-			if (vertices[i].x < leftMost.x) { leftMost = vertices[i] }
-		}
-		
-		return leftMost
-	},
+    
+    findLeftmostPoint : function(vertices) {
+        leftMost = vertices[0]
+        
+        for (var i in vertices) {
+            if (vertices[i].x < leftMost.x) { leftMost = vertices[i] }
+        }
+        
+        return leftMost
+    },
 }
