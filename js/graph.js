@@ -29,6 +29,8 @@ function createVertices() {
         var y = getRandomInt(padding, two_params.height - padding)
         var circle = two.makeCircle(x, y, radius);
         circle.fill = '#FF8000';
+        circle.x = x
+        circle.y = y
         vertices.push(circle)
     }
     
