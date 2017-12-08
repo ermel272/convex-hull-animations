@@ -4,7 +4,8 @@ var two_params = { width: 800, height: 600 };
 var two = null;
 var vertices = [];
 var algorithms = {
-    "gift_wrap": giftWrap
+    "gift_wrap": giftWrap,
+    "graham_scan": grahamScan
 }
 
 function getRandomInt(min, max) {
@@ -52,7 +53,10 @@ function createVertices() {
 }
 
 function execute() {
-    if (vertices.length === 0) { return }
+    if (vertices.length <= 1) { return }
+    
+    // Unbind the update event
+    two.unbind('update', null)
     
     // Find & execute algorithm chosen in the DOM
     alg = document.getElementById('algorithm').value;
