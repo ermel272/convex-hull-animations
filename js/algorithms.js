@@ -59,6 +59,12 @@ function colorEdges(color) {
     }
 }
 
+function getSpeed() {
+    // Gets the execution speed from the DOM
+    speed = document.getElementById('speed').value
+    return speed / 100
+}
+
 var grahamScan = {
     execute : function(vertices, two) {
         // Clear the previous hull, if it exists
@@ -101,7 +107,7 @@ var grahamScan = {
                 
                 two.bind('update', function(frameCount) {
                     if (edge.scale < 0.9999) {
-                        var t = (1 - edge.scale) * 0.3;
+                        var t = (1 - edge.scale) * getSpeed();
                         edge.scale += t;
                     } else {
                         two.unbind('update')
@@ -118,7 +124,7 @@ var grahamScan = {
             
             two.bind('update', function(frameCount) {
                 if (edge.scale < 0.9999) {
-                    var t = (1 - edge.scale) * 0.3;
+                    var t = (1 - edge.scale) * getSpeed();
                     edge.scale += t;
                 } else {
                     two.unbind('update')
@@ -188,7 +194,7 @@ var giftWrap = {
             
             two.bind('update', function(frameCount) {
                 if (edge.scale < 0.9999) {
-                    var t = (1 - edge.scale) * 0.3;
+                    var t = (1 - edge.scale) * getSpeed();
                     edge.scale += t;
                 } else {
                     two.unbind('update')
@@ -215,7 +221,7 @@ var giftWrap = {
             
             two.bind('update', function(frameCount) {
                 if (edge2.scale < 0.9999) {
-                    var t = (1 - edge2.scale) * 0.3;
+                    var t = (1 - edge2.scale) * getSpeed();
                     edge2.scale += t;
                 } else {
                     two.unbind('update')
