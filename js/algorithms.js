@@ -3,6 +3,9 @@ var checkEdgeColor = "rgba(255, 0, 0, 0.5)"
 var hullEdgeColor = "rgba(0, 255, 0, 0.5)"
 var edges = []
 
+/**
+* Removes all edges from the canvas
+*/
 function clearHull(two) {
     if (edges.length == 0) { return }
     
@@ -11,6 +14,9 @@ function clearHull(two) {
     }
 }
 
+/**
+* Draws an edge onto the canvas
+*/
 function createEdge(two, color, v1, v2) {
     edge = two.makeLine(v1.x, v1.y, v2.x, v2.y)
     edge.linewidth = 3
@@ -20,16 +26,20 @@ function createEdge(two, color, v1, v2) {
     
     return edge
 }
-    
+
+/**
+* Determines if v1 -> v2 -> v3 is a left turn
+*/    
 function leftTurn(v1, v2, v3) {
     det = (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x)
-    
     return det < 0
 }
 
+/**
+* Determines if v1 -> v2 -> v3 is a right turn
+*/
 function rightTurn(v1, v2, v3) {
     det = (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x)
-    
     return det > 0
 }
 
@@ -53,14 +63,19 @@ function findRightmostPoint(vertices) {
     return rightMost
 }
 
+/**
+* Colours all edges
+*/
 function colorEdges(color) {
     for (var i in edges) {
         edges[i].stroke = color
     }
 }
 
+/**
+* Gets the execution speed from the DOM
+*/
 function getSpeed() {
-    // Gets the execution speed from the DOM
     speed = document.getElementById('speed').value
     return speed / 100
 }
@@ -80,22 +95,31 @@ var grahamScan = {
         upperVertices.sort(grahamScan.xCompare)
         lowerVertices.sort(grahamScan.xCompare)
         
-        function point_step(points, turn, i) {
-            if (i === 1) {
+        // Ensure a & b are at the front and rear of their component arrays
+        upperVertices.unshift(a)
+        upperVertices.push(b)
+        lowerVertices.unshift(a)
+        lowerVertices.push(b)
+        
+        function point_step(points, turn, i, init) {
+            if (init) {
                 // Initialize the stack
                 stack = []
                 stack.push(points[points.length - 1])
                 stack.push(points[0])
                 stack.push(points[1])
-            } else if (i === points.length - 1) { 
+            } 
+            
+            /**
+            * Base case animation behaviour
+            */
+            function baseCase() {
                 // Base case - we know all the edges are on hull, so color them
                 colorEdges(hullEdgeColor)
                 
                 // Compute the second half of the hull if only the first half has been done
                 if (turn === leftTurn) {
-                    point_step(lowerVertices, rightTurn, 1)
-                } else {
-                    return
+                    point_step(lowerVertices, rightTurn, 1, true)
                 }
             }
             
@@ -109,11 +133,18 @@ var grahamScan = {
                     if (edge.scale < 0.9999) {
                         var t = (1 - edge.scale) * getSpeed();
                         edge.scale += t;
+                    } else if (points.length === 2) {
+                        // Base case - since hull component only has two points
+                        two.unbind('update')
+                        baseCase()
                     } else {
                         two.unbind('update')
                         iter_step(points, stack, alpha, beta, turn, i + 1)
                     }
                 }).play();
+            } else if (i === points.length - 1) { 
+                // Base case - since we have iterated over all component points
+                baseCase()
             } else {
                 iter_step(points, stack, alpha, beta, turn, i + 1)
             }
@@ -128,10 +159,12 @@ var grahamScan = {
                     edge.scale += t;
                 } else {
                     two.unbind('update')
+                    
+                    // Check if a left or right turn is formed
                     if (turn(points[j], alpha, beta)) {
                         stack.push(points[j])
                         edge.stroke = refEdgeColor
-                        point_step(points, turn, j)
+                        point_step(points, turn, j, false)
                     } else {
                         stack.pop()
                         
@@ -146,7 +179,7 @@ var grahamScan = {
             
         }
         
-        point_step(upperVertices, leftTurn, 1)
+        point_step(upperVertices, leftTurn, 1, true)
     },
     
     sortVertices : function(vertices, a, b, turn) {
@@ -157,9 +190,6 @@ var grahamScan = {
         for (var i in vertices) {
             if (turn(a, b, vertices[i])) { v.push(vertices[i]) }
         }
-        
-        v.push(a)
-        v.push(b)
         
         return v
     },
