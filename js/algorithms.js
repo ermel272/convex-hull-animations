@@ -64,6 +64,36 @@ function findRightmostPoint(vertices) {
 }
 
 /**
+* Sorts vertices into an array based on whether or not
+* they form a right or left turn with line ab
+*/
+function sortVertices(vertices, a, b, turn) {
+    v = []
+
+    for (var i in vertices) {
+        if (turn(a, b, vertices[i])) { v.push(vertices[i]) }
+    }
+        
+    return v
+}
+
+/**
+* Returns the distance from point v to the line
+* going throughs points p1 and p2
+*/
+function lineDistance(p1, p2, v) {
+    num = Math.abs(
+        ((p2.y - p1.y) * v.x) - ((p2.x - p1.x) * v.y) + (p2.x * p1.y) - (p2.y * p1.x)
+    )
+    
+    den = Math.sqrt(
+        (p2.y - p1.y)**2 + (p2.x - p1.x)**2
+    )
+    
+    return num / den
+}
+
+/**
 * Colours all edges
 */
 function colorEdges(color) {
@@ -80,6 +110,104 @@ function getSpeed() {
     return speed / 100
 }
 
+var quickHull = {
+    execute : function(vertices, two) {
+        // Clear the previous hull, if it exists
+        clearHull(two)
+        
+        // Sort vertices into upper and lower components
+        a = findLeftmostPoint(vertices)
+        b = findRightmostPoint(vertices)
+        upperVertices = sortVertices(vertices, a, b, leftTurn)
+        lowerVertices = sortVertices(vertices, a, b, rightTurn)
+        
+        // Create an execution queue to handle the recursive animation
+        execQueue = []
+        
+        function findHull(points, a, b, upper, oldEdge) {
+            if (points.length === 0) {
+                oldEdge.stroke = hullEdgeColor
+                if (execQueue.length === 0) { return }
+                
+                // Unpack the params stored in the execution queue
+                findHull(...execQueue.shift())
+                return
+            }
+            
+            oldEdge.stroke = refEdgeColor
+            furthest = quickHull.findFurthestPoint(points, a, b)
+            
+            // Create the quick hull triangle
+            edge1 = createEdge(two, checkEdgeColor, a, furthest)
+            edge2 = createEdge(two, checkEdgeColor, furthest, b)
+            
+            two.bind('update', function(frameCount) {
+                if (edge1.scale < 0.9999) {
+                    var t = (1 - edge1.scale) * getSpeed();
+                    edge1.scale += t;
+                    edge2.scale += t;
+                } else {
+                    two.unbind('update')
+                    
+                    if (upper) {
+                        leftPoints = sortVertices(points, a, furthest, leftTurn)
+                        rightPoints = sortVertices(points, b, furthest, rightTurn)
+                    } else {
+                        leftPoints = sortVertices(points, a, furthest, rightTurn)
+                        rightPoints = sortVertices(points, b, furthest, leftTurn)
+                    }
+                    
+                    // Add these parameters to the execution queue
+                    execQueue.push([leftPoints, a, furthest, upper, edge1])
+                    execQueue.push([rightPoints, furthest, b, upper, edge2])
+                    
+                    // Remove the edge that is not on the convex hull
+                    two.remove(oldEdge)
+                    
+                    // Execute the next thing in line in the queue
+                    findHull(...execQueue.shift())
+                }
+            }).play();
+        }
+        
+        // Create initial edges and add to exec queue
+        refEdge1 = createEdge(two, refEdgeColor, a, b)
+        refEdge2 = createEdge(two, refEdgeColor, a, b)
+        execQueue.push([upperVertices, a, b, true, refEdge1])
+        execQueue.push([lowerVertices, a, b, false, refEdge2])
+        
+        two.bind('update', function(frameCount) {
+            if (refEdge1.scale < 0.9999) {
+                var t = (1 - refEdge1.scale) * getSpeed();
+                refEdge1.scale += t;
+                refEdge2.scale += t;
+            } else {
+                two.unbind('update')
+                findHull(...execQueue.shift())
+            }
+        }).play();
+    },
+    
+    /*
+    * Finds the furthest point from the line going throughs
+    * a & b in the input points array
+    */
+    findFurthestPoint : function(points, a, b) {
+        furthest = points[0]
+        furthestDist = lineDistance(a, b, points[0])
+        
+        for (var i in points) {
+            dist = lineDistance(a, b, points[i])
+            if (dist > furthestDist) {
+                furthestDist = dist
+                furthest = points[i]
+            }
+        }
+        
+        return furthest
+    }
+}
+
 var grahamScan = {
     execute : function(vertices, two) {
         // Clear the previous hull, if it exists
@@ -88,8 +216,8 @@ var grahamScan = {
         // Sort vertices into upper and lower components
         a = findLeftmostPoint(vertices)
         b = findRightmostPoint(vertices)
-        upperVertices = grahamScan.sortVertices(vertices, a, b, leftTurn)
-        lowerVertices = grahamScan.sortVertices(vertices, a, b, rightTurn)
+        upperVertices = sortVertices(vertices, a, b, leftTurn)
+        lowerVertices = sortVertices(vertices, a, b, rightTurn)
         
         // Sort upper and lower components in order increasing by x coordinate
         upperVertices.sort(grahamScan.xCompare)
@@ -180,18 +308,6 @@ var grahamScan = {
         }
         
         point_step(upperVertices, leftTurn, 1, true)
-    },
-    
-    sortVertices : function(vertices, a, b, turn) {
-        // Sorts vertices into an array based on whether or not
-        // they form a right or left turn with line ab
-        v = []
-
-        for (var i in vertices) {
-            if (turn(a, b, vertices[i])) { v.push(vertices[i]) }
-        }
-        
-        return v
     },
     
     xCompare : function(a, b) {

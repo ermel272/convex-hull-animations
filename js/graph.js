@@ -5,7 +5,8 @@ var two = null;
 var vertices = [];
 var algorithms = {
     "gift_wrap": giftWrap,
-    "graham_scan": grahamScan
+    "graham_scan": grahamScan,
+    "quick_hull": quickHull
 }
 
 function getRandomInt(min, max) {
