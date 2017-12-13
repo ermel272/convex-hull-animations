@@ -10,7 +10,7 @@ var algorithms = {
 }
 
 /**
-* Random function taken from https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range.
+* Random function taken from https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 */
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -78,9 +78,13 @@ function execute() {
     algorithms[alg].execute(vertices, two)
 }
 
+/*
+* Pause the animation.
+*/
 function pause() {
     pauseButton = document.getElementById("pause");
     
+    // Someone may laugh at the ASCII chars used in these statements
     if (pauseButton.innerText === "❚❚") {
         two.pause()
         pauseButton.innerText = "►"

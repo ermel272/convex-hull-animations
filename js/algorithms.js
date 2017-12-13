@@ -112,7 +112,7 @@ function getSpeed() {
 
 /**
 * Quick Hull convex hull algorithm.
-* Written using pseudocode from http://www.cse.yorku.ca/~aaw/Hang/quick_hull/Algorithm.html.
+* Written using pseudocode from http://www.cse.yorku.ca/~aaw/Hang/quick_hull/Algorithm.html
 */
 var quickHull = {
     execute : function(vertices, two) {
@@ -343,7 +343,7 @@ var grahamScan = {
 
 /**
 * Gift Wrapping/Jarvis March convex hull algorithm.
-* Written using pseudocode seen at https://en.wikipedia.org/wiki/Gift_wrapping_algorithm.
+* Written using pseudocode seen at https://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 */
 var giftWrap = {
     execute : function(vertices, two) {

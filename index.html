@@ -9,8 +9,29 @@
     <body>
         <header>
             <h1>Convex Hull Algorithms</h1>
-            <h4>Animating the computation of convex hulls in two dimensions</h4>
+            <h3>Animating the computation of convex hulls in two dimensions</h4>
         </header>
+        
+        <p>
+            Computing the convex hull of a set of points is a fundamental problem in the field of computational geometry.
+            For those unaware of what a convex hull is: in 2D, imagine snapping an elastic band around a set of points - 
+            the convex hull is the set of points that form the perimeter created by the elastic band. For more information,
+            check <a href="https://en.wikipedia.org/wiki/Convex_hull">this</a> Wikipedia article out.
+        </p>
+        
+        <p>
+            The purpose of this application is to provide a visualization of the execution of a few popular convex hull algorithms.
+        </p>
+        
+        <p>
+            Namely:
+            <ul>
+                <li><a href="https://en.wikipedia.org/wiki/Gift_wrapping_algorithm" target="_blank">Gift Wrapping</a> - <i>O(nh)</i> </li>
+                <li><a href="https://en.wikipedia.org/wiki/Graham_scan" target="_blank">Graham Scan</a> - <i>O(n log n)</i> </li>
+                <li><a href="https://en.wikipedia.org/wiki/Quickhull" target="_blank">Quick hull</a> - <i>O(n log n)</i> expected </li>
+            </ul>
+            Where <i>n</i> is the number of vertices in the input and <i>h</i> is the number of vertices in the convex hull of the input.
+        <p>
     
         <table>
             <tr>
