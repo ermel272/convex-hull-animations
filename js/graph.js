@@ -9,6 +9,9 @@ var algorithms = {
     "quick_hull": quickHull
 }
 
+/**
+* Random function taken from https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range.
+*/
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -16,12 +19,18 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+/**
+* Adds randomly generated vertices to the canvas.
+*/
 function createVertices() {
     num = document.getElementById('num_vertices').value;
     executeButton = document.getElementById("execute");
-    executeButton.disabled = true
+    pauseButton = document.getElementById("pause");
     
     if (num === "") { return }
+    
+    pauseButton.disabled = false
+    executeButton.disabled = true
     
     // Unbind update event and clear canvas
     two.unbind('update', null)
@@ -49,11 +58,16 @@ function createVertices() {
         } else {
             two.unbind('update', null)
             executeButton.disabled = false
+            pauseButton.disabled = true
         }
     }).play();
 }
 
+/**
+* Trigger the algorithm animation.
+*/
 function execute() {
+    // No point trying to find the convex hull of a single point
     if (vertices.length <= 1) { return }
     
     // Unbind the update event
@@ -62,6 +76,18 @@ function execute() {
     // Find & execute algorithm chosen in the DOM
     alg = document.getElementById('algorithm').value;
     algorithms[alg].execute(vertices, two)
+}
+
+function pause() {
+    pauseButton = document.getElementById("pause");
+    
+    if (pauseButton.innerText === "❚❚") {
+        two.pause()
+        pauseButton.innerText = "►"
+    } else {
+        two.play()
+        pauseButton.innerText = "❚❚"
+    }
 }
 
 // Create canvas once DOM has been loaded

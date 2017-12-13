@@ -110,8 +110,15 @@ function getSpeed() {
     return speed / 100
 }
 
+/**
+* Quick Hull convex hull algorithm.
+* Written using pseudocode from http://www.cse.yorku.ca/~aaw/Hang/quick_hull/Algorithm.html.
+*/
 var quickHull = {
     execute : function(vertices, two) {
+        pauseButton = document.getElementById("pause");
+        pauseButton.disabled = false
+        
         // Clear the previous hull, if it exists
         clearHull(two)
         
@@ -126,11 +133,16 @@ var quickHull = {
         
         function findHull(points, a, b, upper, oldEdge) {
             if (points.length === 0) {
+                // We have reached the base case - we know this edge is on the convex hull
                 oldEdge.stroke = hullEdgeColor
-                if (execQueue.length === 0) { return }
                 
-                // Unpack the params stored in the execution queue
-                findHull(...execQueue.shift())
+                if (execQueue.length != 0) { 
+                    // We still have more recursions queued up
+                    findHull(...execQueue.shift())
+                }
+                
+                // Nothing else to do
+                pauseButton.disabled = true
                 return
             }
             
@@ -149,6 +161,8 @@ var quickHull = {
                 } else {
                     two.unbind('update')
                     
+                    // Whether we check right of left turns depends on if we are
+                    // dealing with points on the upper or lower component of the hull
                     if (upper) {
                         leftPoints = sortVertices(points, a, furthest, leftTurn)
                         rightPoints = sortVertices(points, b, furthest, rightTurn)
@@ -208,8 +222,16 @@ var quickHull = {
     }
 }
 
+/**
+* Graham Scan convex hull algorithm.
+* Written using pseudocode seen in the Fall 2017 offering of COMP 5008 at Carleton University.
+* A similar pseudocode implementation is given in chapter 33.3 of Introduction to Algorithms (Third Edition).
+*/
 var grahamScan = {
     execute : function(vertices, two) {
+        pauseButton = document.getElementById("pause");
+        pauseButton.disabled = false
+        
         // Clear the previous hull, if it exists
         clearHull(two)
         
@@ -248,6 +270,8 @@ var grahamScan = {
                 // Compute the second half of the hull if only the first half has been done
                 if (turn === leftTurn) {
                     point_step(lowerVertices, rightTurn, 1, true)
+                } else {
+                    pauseButton.disabled = true
                 }
             }
             
@@ -317,8 +341,15 @@ var grahamScan = {
     }
 }
 
+/**
+* Gift Wrapping/Jarvis March convex hull algorithm.
+* Written using pseudocode seen at https://en.wikipedia.org/wiki/Gift_wrapping_algorithm.
+*/
 var giftWrap = {
     execute : function(vertices, two) {
+        pauseButton = document.getElementById("pause");
+        pauseButton.disabled = false
+        
         // Clear the previous hull, if it exists
         clearHull(two)
         
@@ -331,7 +362,10 @@ var giftWrap = {
             hull[i] = hullPoint
             
             // Base case - we have wrapped all the way around
-            if (endpoint === hull[0]) { return }
+            if (endpoint === hull[0]) { 
+                pauseButton.disabled = true
+                return
+            }
             
             endpoint = vertices[0]
             

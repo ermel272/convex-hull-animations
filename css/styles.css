@@ -8,6 +8,11 @@
     border: thick dotted black;
 }
 
+#pause {
+    height:30px;
+    width:30px;
+}
+
 table {
     margin: auto;
 }
