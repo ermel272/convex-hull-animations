@@ -139,6 +139,7 @@ var quickHull = {
                 if (execQueue.length != 0) { 
                     // We still have more recursions queued up
                     findHull(...execQueue.shift())
+                    return
                 }
                 
                 // Nothing else to do
