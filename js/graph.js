@@ -26,6 +26,7 @@ function createVertices() {
     num = document.getElementById('num_vertices').value;
     executeButton = document.getElementById("execute");
     pauseButton = document.getElementById("pause");
+    pauseButton.innerText = "❚❚"
     
     if (num === "") { return }
     
@@ -67,6 +68,10 @@ function createVertices() {
 * Trigger the algorithm animation.
 */
 function execute() {
+    // Reset the pause button just in case
+    pauseButton = document.getElementById("pause")
+    pauseButton.innerText = "❚❚"
+    
     // No point trying to find the convex hull of a single point
     if (vertices.length <= 1) { return }
     
